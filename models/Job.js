@@ -14,7 +14,7 @@ const JobSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['interview', 'declined', 'pending'],
+      enum: ['interview', 'declined', 'pending', 'accepted'],
       default: 'pending',
     },
     jobType: {
@@ -31,6 +31,15 @@ const JobSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'User',
       required: [true, 'Please provide user'],
+    },
+    interviewDate: {
+      type: Date,
+      required: [true, 'Please provide interview date'],
+    },
+    stipend: {
+      type: Number,
+      required: [true, 'Please provide stipend amount'],
+      default: 0,
     },
   },
   { timestamps: true }

@@ -1,6 +1,9 @@
 import { FormRow, FormRowSelect, Alert } from '../../components';
 import { useAppContext } from '../../context/appContext';
 import Wrapper from '../../assets/wrappers/DashboardFormPage';
+import { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const AddJob = () => {
   const {
@@ -19,7 +22,17 @@ const AddJob = () => {
     clearValues,
     createJob,
     editJob,
+    stipend,
+    interviewDate,
   } = useAppContext();
+
+  const [selectedDate, setSelectedDate] = useState(new Date(interviewDate));
+
+  useEffect(() => {
+    handleChange({ name: 'interviewDate', value: selectedDate.toISOString() });
+    //disable next line because not putting handleChange in dependency array
+    // eslint-disable-next-line
+  }, [selectedDate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,14 +44,19 @@ const AddJob = () => {
 
     if (isEditing) {
       editJob();
+      setSelectedDate(new Date());
       return;
     }
-
     createJob();
+    setSelectedDate(new Date());
   };
 
   const handleJobInput = (e) => {
-    handleChange({ name: e.target.name, value: e.target.value });
+    if (e.target.name === 'stipend') {
+      handleChange({ name: e.target.name, value: parseInt(e.target.value) });
+    } else {
+      handleChange({ name: e.target.name, value: e.target.value });
+    }
   };
 
   return (
@@ -54,6 +72,7 @@ const AddJob = () => {
             name='position'
             value={position}
             handleChange={handleJobInput}
+            maxLength='50'
           />
 
           {/* {company} */}
@@ -62,6 +81,7 @@ const AddJob = () => {
             name='company'
             value={company}
             handleChange={handleJobInput}
+            maxLength='50'
           />
 
           {/* {jobLocation} */}
@@ -88,6 +108,30 @@ const AddJob = () => {
             value={jobType}
             handleChange={handleJobInput}
             list={jobTypeOptions}
+          />
+
+          {/* interviewDate*/}
+          <div>
+            <label htmlFor='interviewDate' className='form-label'>
+              Interview Date
+            </label>
+            <DatePicker
+              name='interviewDate'
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              className='date-picker'
+              dateFormat='dd/MM/yyyy'
+            />
+          </div>
+
+          {/* stipend */}
+          <FormRow
+            type='number'
+            labelText='stipend per month (₹)'
+            name='stipend'
+            value={stipend}
+            handleChange={handleJobInput}
+            min='0'
           />
 
           <div className='btn-container'>

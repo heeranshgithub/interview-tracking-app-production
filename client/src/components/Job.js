@@ -1,6 +1,12 @@
 import moment from 'moment';
-import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
 import { useAppContext } from '../context/appContext';
+import {
+  FaLocationArrow,
+  FaBriefcase,
+  FaCalendarAlt,
+  FaMoneyCheck,
+} from 'react-icons/fa';
+
 import { Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/Job';
 import JobInfo from './JobInfo';
@@ -13,18 +19,20 @@ const Job = ({
   jobType,
   jobLocation,
   _id,
+  interviewDate,
+  stipend,
 }) => {
   const { setEditJob, deleteJob } = useAppContext();
 
-  let date = moment(createdAt);
+  let date = moment(interviewDate);
   date = date.format('MMM Do, YYYY');
   return (
     <Wrapper>
       <header>
         <div className='main-icon'>{company.charAt(0)}</div>
         <div className='info'>
-          <h5>{position}</h5>
-          <p>{company}</p>
+          <h5>{company}</h5>
+          <p>{position}</p>
         </div>
       </header>
       <div className='content'>
@@ -32,6 +40,7 @@ const Job = ({
           <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
           <JobInfo icon={<FaCalendarAlt />} text={date} />
           <JobInfo icon={<FaBriefcase />} text={jobType} />
+          <JobInfo icon={<FaMoneyCheck />} text={`₹${stipend}`} />
           <div className={`status ${status}`}>{status}</div>
         </div>
         <footer>

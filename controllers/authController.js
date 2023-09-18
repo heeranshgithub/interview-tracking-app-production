@@ -15,6 +15,8 @@ const register = async (req, res) => {
 
   if (emailExists) throw new BadRequestError('Email already in use!');
 
+  if (password.length < 6)
+    throw new BadRequestError('password must be longer than 6 characters!');
   const user = await User.create({ name, email, password }); //if mongoDB throws error here it will go to error middleware
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({
@@ -73,4 +75,30 @@ const updateUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
 
-export { register, login, updateUser };
+const changePassword = async (req, res) => {
+  const { oldPass, newPass } = req.body;
+
+  if (!oldPass || !newPass) {
+    throw new BadRequestError('Please provide old password and new password.');
+  }
+
+  if (newPass.length < 6) {
+    throw new BadRequestError('Password must be longer than 6 characters!');
+  }
+
+  const user = await User.findById({ _id: req.user.userId }).select(
+    '+password'
+  );
+
+  const isPasswordCorrect = await user.comparePassword(oldPass);
+
+  if (!isPasswordCorrect)
+    throw new BadRequestError('Invalid old password.');
+
+  user.password = newPass;
+  await user.save();
+
+  res.status(StatusCodes.OK).json({ msg: 'Password changed successfully!' });
+};
+
+export { register, login, updateUser, changePassword };

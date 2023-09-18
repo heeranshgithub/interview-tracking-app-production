@@ -18,19 +18,24 @@ const SearchContainer = () => {
 
   const handleSearch = (e) => {
     // if (isLoading) return;
-
+    
     handleChange({ name: e.target.name, value: e.target.value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  }
+
   return (
     <Wrapper>
-      <form className='form'>
-      <h4>search form</h4>
+      <form className='form' onSubmit={handleSubmit}>
+        <h4>search form</h4>
 
         <div className='form-center'>
           {/* search by company */}
           <FormRow
             type='text'
+            labelText='search by company'
             name='search'
             value={search}
             handleChange={handleSearch}

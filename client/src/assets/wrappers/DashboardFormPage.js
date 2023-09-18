@@ -63,6 +63,17 @@ const Wrapper = styled.section`
   .clear-btn:hover {
     background: #a12b1b;
   }
+
+  .date-picker{
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 7px 0;
+    padding-left: 8px;
+    width: 100%;
+  }
+
   @media (min-width: 992px) {
     .form-center {
       grid-template-columns: 1fr 1fr;

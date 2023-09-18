@@ -22,7 +22,7 @@ const createJob = async (req, res) => {
 };
 
 const getAllJobs = async (req, res) => {
-  const { status, jobType, sort, search } = req.query;
+  const { search, status, jobType, sort } = req.query;
 
   const queryObject = {
     createdBy: req.user.userId,
@@ -47,19 +47,23 @@ const getAllJobs = async (req, res) => {
 
   //chain sort conditions
   if (sort === 'latest') {
-    result.sort('-createdAt');
+    result.sort('-interviewDate');
   }
 
   if (sort === 'oldest') {
-    result.sort('createdAt');
+    result.sort('interviewDate');
   }
 
   if (sort === 'a-z') {
-    result.sort('position');
+    result.sort('company');
   }
 
   if (sort === 'z-a') {
-    result.sort('-position');
+    result.sort('-company');
+  }
+
+  if (sort === 'stipend') {
+    result.sort('-stipend');
   }
 
   const page = Number(req.query.page) || 1; //Number() because req.query come as string
@@ -132,6 +136,7 @@ const showStats = async (req, res) => {
     pending: stats.pending || 0,
     interview: stats.interview || 0,
     declined: stats.declined || 0,
+    accepted: stats.accepted || 0,
   };
 
   let monthlyApplications = await Job.aggregate([

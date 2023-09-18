@@ -26,6 +26,9 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
   DELETE_JOB_ERROR,
+  CHANGE_PASSWORD_FAIL,
+  CHANGE_PASSWORD_BEGIN,
+  CHANGE_PASSWORD_SUCCESS,
 } from './actions';
 
 import { initialState } from './appContext';
@@ -142,7 +145,9 @@ const reducer = (state, action) => {
       company: '',
       jobLocation: state.userLocation,
       jobType: 'full-time',
-      status: 'pending',
+      status: 'interview',
+      interviewDate: new Date().toISOString(),
+      stipend: 0,
     };
 
     return { ...state, ...initialState };
@@ -192,7 +197,16 @@ const reducer = (state, action) => {
 
   if (action.type === SET_EDIT_JOB) {
     const job = state.jobs.find((job) => job._id === action.payload.id);
-    const { _id, company, position, status, jobType, jobLocation } = job;
+    const {
+      _id,
+      company,
+      position,
+      status,
+      jobType,
+      jobLocation,
+      interviewDate,
+      stipend,
+    } = job;
     return {
       ...state,
       isEditing: true,
@@ -202,6 +216,8 @@ const reducer = (state, action) => {
       status,
       jobType,
       jobLocation,
+      interviewDate,
+      stipend,
     };
   }
 
@@ -280,6 +296,34 @@ const reducer = (state, action) => {
     return {
       ...state,
       page: action.payload.page,
+    };
+  }
+
+  if (action.type === CHANGE_PASSWORD_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: false,
+    };
+  }
+
+  if (action.type === CHANGE_PASSWORD_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: action.payload.msg,
+    };
+  }
+
+  if (action.type === CHANGE_PASSWORD_FAIL) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
     };
   }
 

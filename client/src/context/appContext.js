@@ -29,6 +29,9 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
   DELETE_JOB_ERROR,
+  CHANGE_PASSWORD_BEGIN,
+  CHANGE_PASSWORD_FAIL,
+  CHANGE_PASSWORD_SUCCESS,
 } from './actions';
 
 const user = localStorage.getItem('user');
@@ -51,9 +54,9 @@ const initialState = {
   company: '',
   jobLocation: userLocation || '',
   jobType: 'full-time',
-  status: 'pending',
-  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
-  statusOptions: ['pending', 'interview', 'declined'],
+  status: 'interview',
+  statusOptions: ['interview', 'pending', 'accepted', 'declined'],
+  jobTypeOptions: ['full-time', 'internship'],
   jobs: [],
   totalJobs: 0,
   numOfPages: 1,
@@ -64,7 +67,9 @@ const initialState = {
   searchStatus: 'all',
   searchType: 'all',
   sort: 'latest',
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  sortOptions: ['latest', 'oldest', 'a-z', 'z-a', 'stipend'],
+  interviewDate: new Date().toISOString(),
+  stipend: 0,
 };
 
 const AppContext = createContext();
@@ -194,7 +199,15 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CREATE_JOB_BEGIN });
 
     try {
-      const { company, position, jobLocation, jobType, status } = state;
+      const {
+        company,
+        position,
+        jobLocation,
+        jobType,
+        status,
+        interviewDate,
+        stipend,
+      } = state;
 
       await authFetch.post('/jobs', {
         company,
@@ -202,6 +215,8 @@ const AppProvider = ({ children }) => {
         jobLocation,
         jobType,
         status,
+        interviewDate,
+        stipend,
       });
       dispatch({ type: CREATE_JOB_SUCCESS });
       dispatch({ type: CLEAR_VALUES }); //setting the values back to default
@@ -249,7 +264,15 @@ const AppProvider = ({ children }) => {
   const editJob = async () => {
     dispatch({ type: EDIT_JOB_BEGIN });
 
-    const { position, company, location, status, jobType } = state;
+    const {
+      position,
+      company,
+      location,
+      status,
+      jobType,
+      interviewDate,
+      stipend,
+    } = state;
 
     try {
       await authFetch.patch(`/jobs/${state.editJobId}`, {
@@ -258,6 +281,8 @@ const AppProvider = ({ children }) => {
         location,
         status,
         jobType,
+        interviewDate,
+        stipend,
       });
       dispatch({ type: EDIT_JOB_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
@@ -318,6 +343,28 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CHANGE_PAGE, payload: { page } });
   };
 
+  const changePassword = async (passwords) => {
+    dispatch({ type: CHANGE_PASSWORD_BEGIN });
+    try {
+      const {
+        data: { msg },
+      } = await authFetch.patch('/auth/changePassword', passwords);
+
+      dispatch({ type: CHANGE_PASSWORD_SUCCESS, payload: { msg } });
+    } catch (error) {
+      if (error.response.status === 401) {
+        logoutUser();
+        return;
+      }
+
+      dispatch({
+        type: CHANGE_PASSWORD_FAIL,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -337,6 +384,7 @@ const AppProvider = ({ children }) => {
         showStats,
         clearFilters,
         changePage,
+        changePassword,
       }}
     >
       {children}

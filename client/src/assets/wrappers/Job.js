@@ -45,13 +45,17 @@ const Wrapper = styled.article`
     /* background: #fcefc7; */
     color: #e9b949;
   }
-  .interview {
+  .accepted {
     /* background: #e0e8f9; */
     color: #54d677;
   }
   .declined {
     color: #d66a6a;
     /* background: #ffeeee; */
+  }
+  .interview {
+  /* color: var(--lightBgColor); */
+  color: #03fcf0;
   }
   .content {
     padding: 1rem 1.5rem;
