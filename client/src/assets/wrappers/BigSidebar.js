@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Wrapper = styled.aside`
   display: none;
@@ -25,7 +25,7 @@ const Wrapper = styled.aside`
       display: flex;
       align-items: center;
       padding-left: 2.5rem;
-      h3{
+      h3 {
         margin-top: 27px;
       }
     }
@@ -44,7 +44,6 @@ const Wrapper = styled.aside`
       transition: var(--transition);
     }
     .nav-link:hover {
-      
       padding-left: 3rem;
       color: white;
     }
@@ -65,5 +64,5 @@ const Wrapper = styled.aside`
       color: white;
     }
   }
-`
-export default Wrapper
+`;
+export default Wrapper;

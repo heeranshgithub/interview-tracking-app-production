@@ -145,10 +145,10 @@ const showStats = async (req, res) => {
       $group: {
         _id: {
           year: {
-            $year: '$createdAt',
+            $year: '$interviewDate',
           },
           month: {
-            $month: '$createdAt',
+            $month: '$interviewDate',
           },
         },
         count: { $sum: 1 },

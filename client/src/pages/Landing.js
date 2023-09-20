@@ -20,20 +20,17 @@ const Landing = () => {
         <Navigate to='/' />
       ) : (
         <Wrapper>
-          <nav>
-            {/* <Logo /> */}
-          </nav>
+          <nav>{/* <Logo /> */}</nav>
           <div className='container page'>
             {/* info */}
             <div className='info'>
               <h1>
-                Interview <br></br><span>Tracking</span> <br></br>App
+                Interview <br></br>
+                <span>Tracking</span> <br></br>App
               </h1>
-              <p>
-                 
-              </p>
-              <Link to='/register' className='btn btn-hero'>
-                Login/Register
+              <p></p>
+              <Link to='/login' className='btn btn-hero register-btn'>
+                Login / Demo App
               </Link>
             </div>
             <img src={main} alt='job hunt' className='img main-img' />

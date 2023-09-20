@@ -13,7 +13,6 @@ import JobInfo from './JobInfo';
 
 const Job = ({
   company,
-  createdAt,
   position,
   status,
   jobType,
@@ -23,6 +22,10 @@ const Job = ({
   stipend,
 }) => {
   const { setEditJob, deleteJob } = useAppContext();
+
+  const addCommas = (num) => {
+    return num.toLocaleString('en-IN');
+  };
 
   let date = moment(interviewDate);
   date = date.format('MMM Do, YYYY');
@@ -40,7 +43,7 @@ const Job = ({
           <JobInfo icon={<FaLocationArrow />} text={jobLocation} />
           <JobInfo icon={<FaCalendarAlt />} text={date} />
           <JobInfo icon={<FaBriefcase />} text={jobType} />
-          <JobInfo icon={<FaMoneyCheck />} text={`₹${stipend}`} />
+          <JobInfo icon={<FaMoneyCheck />} text={`₹${addCommas(stipend)}`} />
           <div className={`status ${status}`}>{status}</div>
         </div>
         <footer>

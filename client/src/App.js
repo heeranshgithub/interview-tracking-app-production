@@ -26,7 +26,7 @@ function App() {
           <Route path='profile' element={<Profile />} />
         </Route>
         {/* the user goes directly to the dashboard if logged in after entering the url ^  */}
-        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Register />} />
         <Route path='/landing' element={<Landing />} />
         <Route path='*' element={<Error />} />
       </Routes>
